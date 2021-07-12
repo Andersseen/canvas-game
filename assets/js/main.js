@@ -46,6 +46,7 @@ function update() {
             y: -50,
             dx: Math.random() * 2 - 1,
             dy: Math.random() * 2 + 2,
+            del: 0,
         });
     }
 
@@ -73,6 +74,24 @@ function update() {
         //limits
         if (aster[i].x >= 550 || aster[i].x < 0) aster[i].dx = -aster[i].dx;
         if (aster[i].y >= 600) aster.splice(i, 1);
+
+        for (j in fireball) {
+
+            if (Math.abs(aster[i].x + 25 - fireball[j].x - 15) < 50 && Math.abs(aster[i].y - fireball[j].y) < 25) {
+                //crash
+                // expl.push({
+                //     x: aster[i].x - 25,
+                //     y: aster[i].y - 25,
+                // });
+                aster[i].del = 1;
+                fireball.splice(j, 1);
+                break;
+            }
+        }
+        if (aster[i].del == 1) {
+            aster.splice(i, 1);
+        }
+
     }
 
     for (i in fireball) {
