@@ -3,14 +3,18 @@ const context = canvas.getContext('2d');
 
 const aster = [];
 let fireball = [];
+let expl = [];
 let timer = 0;
 const starShip = { x: 300, y: 300 };
 
 const asteroideImg = new Image();
 asteroideImg.src = "./assets/img/asteroide.png";
 
-fireballImg = new Image();
+const fireballImg = new Image();
 fireballImg.src = "./assets/img/fireball.png";
+
+const explImg = new Image();
+explImg.src = "./assets/img/explosion.png";
 
 const starShipImg = new Image();
 starShipImg.src = "./assets/img/starship.png";
@@ -79,15 +83,20 @@ function update() {
 
             if (Math.abs(aster[i].x + 25 - fireball[j].x - 15) < 50 && Math.abs(aster[i].y - fireball[j].y) < 25) {
                 //crash
-                // expl.push({
-                //     x: aster[i].x - 25,
-                //     y: aster[i].y - 25,
-                // });
+                //explosion
+                expl.push({
+                    x: aster[i].x - 25,
+                    y: aster[i].y - 25,
+                    animx: 0,
+                    animy: 0,
+                })
+                //delete aster
                 aster[i].del = 1;
                 fireball.splice(j, 1);
                 break;
             }
         }
+        //delete asteroide
         if (aster[i].del == 1) {
             aster.splice(i, 1);
         }
@@ -102,6 +111,17 @@ function update() {
         if (fireball[i].y < -30) fireball.splice(i, 1);
     }
 
+    for (i in expl) {
+        expl[i].animx = expl[i].animx + 0.3;
+        if (expl[i].animx > 7) {
+            expl[i].animy++;
+            expl[i].animx = 0;
+        }
+        if (expl[i].animy > 7) {
+            expl.splice(i, 1);
+        }
+    }
+
 }
 
 function render() {
@@ -114,6 +134,9 @@ function render() {
 
     for (i in aster) {
         context.drawImage(asteroideImg, aster[i].x, aster[i].y, 50, 50);
+    }
+    for (i in expl) {
+        context.drawImage(explImg, 128 * Math.floor(expl[i].animx), 128 * Math.floor(expl[i].animy), 128, 128, expl[i].x, expl[i].y, 100, 100);
     }
 }
 
